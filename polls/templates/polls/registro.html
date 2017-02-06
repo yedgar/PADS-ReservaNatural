@@ -26,7 +26,7 @@
                 contentType:"application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    window.location = "../verImagenes";
+                    window.location = "../";
                 },
                 failure: function (errMsg) {
                     alert("Hubo un error "+errMsg);
@@ -55,7 +55,7 @@
                 <br />
                 <input id="intereses" name="intereses" type="text" placeholder="Intereses Reserva" class="form-control input-md" required/>
                 <br />
-                <input type="button" value="Registrar" class="btn btn-primary" onclick="enviarForm()"/>
+                <input type="button" value="Registrar" class="btn btn-primary" onclick="enviarForm();"/>
                 <a href="../">Cancelar</a>
 
         </div>

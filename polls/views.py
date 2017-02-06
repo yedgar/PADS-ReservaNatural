@@ -49,62 +49,38 @@ def add_image(request):
 @csrf_exempt
 def add_user_view(request):
     if request.method == 'POST':
-        #1.form = UserForm(request.POST)
-        #1.if form.is_valid():
-        #1.    cleaned_data = form.cleaned_data
-        #1.    username = cleaned_data.get('username')
-        #1.   first_name = cleaned_data.get('first_name')
-        #1.  last_name = cleaned_data.get('last_name')
-        #1.  password = cleaned_data.get('password')
-        #1.   email = cleaned_data.get('email')
-            jsonUser = json.loads(request.body)
-            username = jsonUser['username']
-            first_name = jsonUser['first_name']
-            last_name = jsonUser['last_name']
-            password = jsonUser['password']
-            email = jsonUser['email']
+        jsonUser = json.loads(request.body)
+        username = jsonUser['username']
+        first_name = jsonUser['first_name']
+        last_name = jsonUser['last_name']
+        password = jsonUser['password']
+        email = jsonUser['email']
 
-            user_model = User.objects.create_user(username=username, password=password)
-            user_model.first_name = first_name
-            user_model.last_name = last_name
-            user_model.email = email
-            user_model.save()
-            #1.return HttpResponseRedirect(reverse('images:index'))
-    #1.else:
-        #1.form = UserForm()
-    #1.context = {
-    #1.    'form':form
-    #1.}
-    #1.return render(request,'polls/registro.html',context)
+        user_model = User.objects.create_user(username=username, password=password)
+        user_model.first_name = first_name
+        user_model.last_name = last_name
+        user_model.email = email
+        user_model.save()
     return HttpResponse(serializers.serialize("json", [user_model]))
 
 @csrf_exempt
 def login_view(request):
-    #1.if request.user.is_authenticated():
-    #1.   return redirect('images:index')
-
     mensaje = ''
     if request.method == 'POST':
-        #1.username = request.POST.get('username')
-        #1.password = request.POST.get('password')
         jsonUser = json.loads(request.body)
         username = jsonUser['username']
         password = jsonUser['password']
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request,user)
-            #1.return redirect('images:index')
             mensaje = "ok"
         else:
             mensaje = 'Nombre de usuario o clave no valido'
-
-    #1.return render(request,'polls/login.html',{'mensaje':mensaje})
     return JsonResponse({"mensaje": mensaje})
 
 @csrf_exempt
 def logout_view(request):
     logout(request)
-    #1.return HttpResponseRedirect(reverse('images:index'))
     return JsonResponse({"mensaje": "ok"})
 
 @csrf_exempt
