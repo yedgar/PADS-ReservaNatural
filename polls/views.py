@@ -9,40 +9,8 @@ from django.urls.base import reverse
 from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
-from polls.models import Usuario, Pais, Ciudad
+from polls.models import Usuario, Pais, Ciudad, Especie, Categoria
 
-
-@csrf_exempt
-def index(request):
-    print "hola"
-    #     if request.user.is_authenticated():
-    #         lista_imagenes = Imagen.objects.filter(user=request.user)
-    #     else:
-    #         lista_imagenes = Imagen.objects.all()
-    # #1.    context = {'lista_imagenes': lista_imagenes}
-    # #1.    return render(request, 'polls/index.html', context)
-    #return HttpResponse(serializers.serialize("json", lista_imagenes))
-
-@csrf_exempt
-def add_image(request):
-    if request.method == 'POST':
-        print "hola"
-        #1.form = ImagenForm(request.POST, request.FILES)
-        #1.if form.is_valid():
-            # new_image = Imagen(url=request.POST['url'],
-            #                    title=request.POST['title'],
-            #                    description=request.POST['description'],
-            #                    type=request.POST['type'],
-            #                    imageFile=request.FILES['imageFile'],
-            #                    user=request.user)
-            # new_image.save()
-            #1.return HttpResponseRedirect(reverse('images:index'))
-    #1.else:
-        #1.form = ImagenForm()
-
-    #1.return render(request,'polls/image_form.html',{'form':form})
-    #return HttpResponse(serializers.serialize("json", [new_image]))
-    return render(request, "polls/index.html")
 
 @csrf_exempt
 def add_user_view(request):
@@ -114,6 +82,14 @@ def consultar_ciudades(request):
     qs_json = serializers.serialize('json', qs)
     return JsonResponse(qs_json, safe=False)
 
+@csrf_exempt
+def obtener_especies(request):
+    qs = Especie.objects.all()
+    for especie in qs:
+        especie.categoria_id = Categoria.objects.filter(id = especie.categoria_id).first().nombre
+    qs_json = serializers.serialize('json', qs)
+    return JsonResponse(qs_json, safe=False)
+
 def is_logged_view(request):
     if request.user.is_authenticated():
         mensaje = 'ok'
@@ -123,9 +99,6 @@ def is_logged_view(request):
 
 def ir_index(request):
     return render(request,"polls/index.html")
-
-def agregar_imagen(request):
-    return render(request, "polls/image_form.html")
 
 def agregar_usuario(request):
     return render(request, "polls/registro.html")
