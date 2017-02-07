@@ -1,10 +1,7 @@
 import json
 
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
 from django.core import serializers
-
-from django.core.checks.security import csrf
 
 from django.http.response import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
@@ -12,7 +9,8 @@ from django.urls.base import reverse
 from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
-from polls.models import UserForm
+from polls.models import Usuario
+
 
 @csrf_exempt
 def index(request):
@@ -48,20 +46,31 @@ def add_image(request):
 
 @csrf_exempt
 def add_user_view(request):
+    mensaje = ""
     if request.method == 'POST':
-        jsonUser = json.loads(request.body)
-        username = jsonUser['username']
-        first_name = jsonUser['first_name']
-        last_name = jsonUser['last_name']
-        password = jsonUser['password']
-        email = jsonUser['email']
+        password = request.POST['password']
+        password2 = request.POST['password2']
+        usuarios = Usuario.objects.filter(username=request.POST['username'])
+        usuarios2 = Usuario.objects.filter(email=request.POST['email'])
+        usuario = Usuario(username=request.POST['username'],
+                          first_name=request.POST['first_name'],
+                          last_name=request.POST['last_name'],
+                          password=password,
+                          email=request.POST['email'],
+                          interes=request.POST['intereses'],
+                          imageFile=request.FILES['fotoFile']
+                          )
+        if password == password2:
+            if not usuarios.exists() and not usuarios2.exists():
+                usuario.set_password(password)
+                usuario.save()
+                mensaje = "ok"
+            else:
+                mensaje = "El usuario ya existe"
+        else:
+            mensaje = "Las contrasenas no coinciden"
 
-        user_model = User.objects.create_user(username=username, password=password)
-        user_model.first_name = first_name
-        user_model.last_name = last_name
-        user_model.email = email
-        user_model.save()
-    return HttpResponse(serializers.serialize("json", [user_model]))
+    return JsonResponse({"mensaje": mensaje})
 
 @csrf_exempt
 def login_view(request):
