@@ -9,7 +9,7 @@ from django.urls.base import reverse
 from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
-from polls.models import Usuario
+from polls.models import Usuario, Pais, Ciudad
 
 
 @csrf_exempt
@@ -58,7 +58,8 @@ def add_user_view(request):
                           password=password,
                           email=request.POST['email'],
                           interes=request.POST['intereses'],
-                          imageFile=request.FILES['fotoFile']
+                          imageFile=request.FILES['fotoFile'],
+                          ciudad_id=request.POST['ciudades']
                           )
         if password == password2:
             if not usuarios.exists() and not usuarios2.exists():
@@ -100,6 +101,18 @@ def islogged_view(request):
         mensaje = 'no'
 
     return JsonResponse({"mensaje": mensaje})
+
+@csrf_exempt
+def consultar_paises(request):
+    qs = Pais.objects.all()
+    qs_json = serializers.serialize('json', qs)
+    return JsonResponse(qs_json, safe=False)
+
+@csrf_exempt
+def consultar_ciudades(request):
+    qs = Ciudad.objects.filter(pais = request.GET['id'])
+    qs_json = serializers.serialize('json', qs)
+    return JsonResponse(qs_json, safe=False)
 
 def is_logged_view(request):
     if request.user.is_authenticated():

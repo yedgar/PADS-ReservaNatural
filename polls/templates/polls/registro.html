@@ -42,9 +42,15 @@
             <br/>
             <input id="fotoFile" name="fotoFile" type="file"/>
             <br/>
+            <select id="paises" name="paises" class="selectpicker form-control" required>
+            </select>
+            <br/>
+            <select id="ciudades" name="ciudades" class="selectpicker form-control" required>
+            </select>
+            <br/>
+            <br/>
             <input type="submit" value="Registrar" class="btn btn-primary"/>
             <a href="../">Cancelar</a>
-
         </div>
     </div>
 </form>
@@ -69,6 +75,32 @@
         });
         e.preventDefault();
     });
+    (function(){
+            $.getJSON("../consultarPaises").done(function (data) {
+                if (data){
+                    data =  $.parseJSON(data);
+                    var paises = $("#paises");
+                    paises.append($("<option />").val("").text("Seleccione..."));
+                    $(data).each(function() {
+                        paises.append($("<option />").val(this.pk).text(this.fields.nombre));
+                    });
+                }
+            });
+        })();
+
+    $('#paises').on('change', function() {
+        $.getJSON("../consultarCiudades?id="+this.value).done(function (data) {
+            if (data){
+                data =  $.parseJSON(data);
+                var ciudades = $("#ciudades");
+                ciudades.empty();
+                ciudades.append($("<option />").val("").text("Seleccione..."));
+                $(data).each(function() {
+                    ciudades.append($("<option />").val(this.pk).text(this.fields.nombre));
+                });
+            }
+        });
+    })
 </script>
 </body>
 </html>
