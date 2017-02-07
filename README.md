@@ -11,15 +11,15 @@ https://github.com/yedgar/PADS-ReservaNatural.git
    - postgres
    - psycopg2
    
-   O instalarlos con el el comando pip
+   ó instalarlos con el el comando pip
  
- 3. Crear la base de datos, se deberá correr al inicio el comando:
+3. Crear la base de datos, se deberá correr al inicio el comando:
     
     python manage.py migrate
     
- 4. Una vez verificado que desde la base de datos se encuentran creadas las tablas, se corre el servidor.
+4. Una vez verificado que desde la base de datos se encuentran creadas las tablas, se corre el servidor.
  
- 5. Probar con http://localhost:8000/polls
+5. Probar con http://localhost:8000/polls
  
  
  -----------------------------------------
