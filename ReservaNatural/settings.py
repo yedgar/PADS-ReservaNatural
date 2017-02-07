@@ -25,7 +25,7 @@ SECRET_KEY = 'reujb2-d(te@o6jyt_apy_liz8+v#zi5&p-89(%66bns$f45iz'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -119,9 +119,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-import dj_database_url
-DATABASES['default'] =  dj_database_url.config()
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
@@ -134,3 +131,7 @@ STATICFILES_DIRS = [
 
 
 AUTH_USER_MODEL = 'polls.Usuario'
+
+
+import dj_database_url
+DATABASES['default'] =  dj_database_url.config()
