@@ -13,7 +13,6 @@ urlpatterns = [
     #url(r'^images/$', views.index, name='index'),
     url(r'^$', views.ir_index, name=''),
     url(r'^isLogged/$', views.islogged_view, name='isLogged'),
-    url(r'^/$', views.ir_index, name='/'),
     url(r'^agregarImagen/$', views.agregar_imagen, name='agregarImagen'),
     url(r'^agregarUsuario/$', views.agregar_usuario, name='agregarUsuario'),
     url(r'^ingresar/$', views.ingresar, name='ingresar'),

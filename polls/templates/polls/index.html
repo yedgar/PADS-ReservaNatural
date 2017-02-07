@@ -41,7 +41,7 @@
         function logout(){
             $.getJSON("logout").done(function (data) {
                 if (data.mensaje == 'ok'){
-                    location.reload();
+                     window.location = "";
                 }else{
                     alert("Hubo un error");
                 }
