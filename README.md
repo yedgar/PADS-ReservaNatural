@@ -8,8 +8,9 @@ https://github.com/yedgar/PADS-ReservaNatural.git
 
 2. En la ambiente virtual se deben tener instalados los paquetes:
    - Django
-   - postgres
+   - postgres -> Instalar Postgres en el computador y asegurar que se encuentra en el Path para poder instalar los paquetes
    - psycopg2
+   - Pillow para porder ver las imagenes si lo pide: pip install Pillow
    
    ó instalarlos con el el comando pip
  
@@ -20,6 +21,11 @@ https://github.com/yedgar/PADS-ReservaNatural.git
 4. Una vez verificado que desde la base de datos se encuentran creadas las tablas, se corre el servidor.
  
 5. Probar con http://localhost:8000/polls
+
+6. Crear el usuario super user para poder acceder a la funcionalidad de administrador: python manage.py createsuperuser
+
+7. Ingresar a http://localhost:8000/admin con el usuario administrador e ingresar: Categorias y luego Especies para poder verlos en la pantalla Principal
+
  
  
  -----------------------------------------
