@@ -6,6 +6,8 @@ from . import views
 
 urlpatterns = [
     url(r'^addUser/$', views.add_user_view, name='addUser'),
+    url(r'^modUser/$', views.mod_user_view, name='modUser'),
+    url(r'^modPassword/$', views.mod_password_view, name='modPassword'),
     url(r'^login/$', views.login_view, name='login'),
     url(r'^logout/$', views.logout_view, name='logout'),
     url(r'^consultarPaises/$', views.consultar_paises, name='consultarPaises'),
@@ -14,6 +16,9 @@ urlpatterns = [
 
     url(r'^$', views.ir_index, name=''),
     url(r'^isLogged/$', views.islogged_view, name='isLogged'),
+    url(r'^loggedUser/$', views.logged_user, name='loggedUser'),
     url(r'^agregarUsuario/$', views.agregar_usuario, name='agregarUsuario'),
+    url(r'^modificarUsuario/$', views.modificar_usuario, name='modificarUsuario'),
+    url(r'^modificarPassword/$', views.modificar_password, name='modificarPassword'),
     url(r'^ingresar/$', views.ingresar, name='ingresar'),
 ]
