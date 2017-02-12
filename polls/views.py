@@ -126,12 +126,17 @@ def logout_view(request):
 
 @csrf_exempt
 def islogged_view(request):
+    json_usuario = ""
     if request.user.is_authenticated():
         mensaje = 'ok'
+        usuario = Usuario.objects.filter(username=request.user.username)
+        datos_usuarios = serializers.serialize('json', usuario)
+        struct = json.loads(datos_usuarios)
+        json_usuario = json.dumps(struct[0])
     else:
         mensaje = 'no'
 
-    return JsonResponse({"mensaje": mensaje})
+    return JsonResponse({"mensaje": mensaje, "usuario": json_usuario})
 
 @csrf_exempt
 def consultar_paises(request):
