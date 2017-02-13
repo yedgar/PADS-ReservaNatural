@@ -90,6 +90,15 @@ def obtener_especies(request):
     qs_json = serializers.serialize('json', qs)
     return JsonResponse(qs_json, safe=False)
 
+@csrf_exempt
+def consultar_especie(request):
+    #qs = Especie.objects.filter(id = request.GET.get('id', '2'))
+    qs = Especie.objects.filter(id=globvar)
+    for especie in qs:
+        especie.categoria_id = Categoria.objects.filter(id = especie.categoria_id).first().nombre
+    qs_json = serializers.serialize('json', qs)
+    return JsonResponse(qs_json, safe=False)
+
 def is_logged_view(request):
     if request.user.is_authenticated():
         mensaje = 'ok'
@@ -105,3 +114,11 @@ def agregar_usuario(request):
 
 def ingresar(request):
     return render(request, "polls/login.html")
+
+@csrf_exempt
+def obtener_especie(request):
+    global globvar
+    globvar = request.GET.get('id');
+    consultar_especie(request)
+    return render(request, "polls/detalleespecie.html")
+
