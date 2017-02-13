@@ -83,6 +83,18 @@ def consultar_ciudades(request):
     return JsonResponse(qs_json, safe=False)
 
 @csrf_exempt
+def consultar_ciudad_user(request):
+    user = request.user
+    ciudad = user.ciudad.nombre
+    return JsonResponse({'ciudad': ciudad})
+
+@csrf_exempt
+def consultar_pais_user(request):
+    user = request.user
+    pais = user.ciudad.pais.nombre
+    return JsonResponse({'pais': pais})
+
+@csrf_exempt
 def obtener_especies(request):
     qs = Especie.objects.all()
     for especie in qs:
@@ -97,6 +109,60 @@ def is_logged_view(request):
         mensaje = 'no'
     return JsonResponse({'mensaje':mensaje})
 
+@csrf_exempt
+def obtener_infoUsuario(request):
+    return HttpResponse(serializers.serialize("json", [request.user]))
+
+@csrf_exempt
+def editarUsuario(request):
+    mensaje = ""
+    if request.method == 'POST':
+
+        username = request.POST['username']
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        email = request.POST['email']
+        interes = request.POST['intereses']
+        imageFile = request.FILES.get('fotoFile')
+        ciudad_id = request.POST['ciudades']
+
+        user = request.user
+
+        user.username = username
+        user.first_name = first_name
+        user.last_name = last_name
+        user.email = email
+        user.interes = interes
+        if (imageFile != None):
+            user.imageFile = imageFile
+        user.ciudad_id = ciudad_id
+        user.save()
+        mensaje = "ok"
+
+    return JsonResponse({'mensaje':mensaje})
+
+@csrf_exempt
+def mod_password_view(request):
+    mensaje = ''
+    if request.method == 'POST':
+        password = request.POST['password']
+        password2 = request.POST['password2']
+        if password == password2:
+            requestUser = Usuario.objects.get(username=request.user.username)
+            requestUser.set_password(password)
+            requestUser.save()
+            user = authenticate(username=request.user.username, password=password)
+            if user is not None:
+                login(request, user)
+                mensaje = "ok"
+            else:
+                mensaje = "Fail :("
+        else:
+            mensaje = "Las contrasenas no coinciden"
+
+    return JsonResponse({"mensaje": mensaje})
+
+
 def ir_index(request):
     return render(request,"polls/index.html")
 
@@ -105,3 +171,9 @@ def agregar_usuario(request):
 
 def ingresar(request):
     return render(request, "polls/login.html")
+
+def perfil(request):
+    return render(request, "polls/perfil.html")
+
+def modificar_password(request):
+    return render(request, "polls/password.html")
