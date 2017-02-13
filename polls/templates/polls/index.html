@@ -33,6 +33,7 @@
                     $("#mod_pass").hide();
                     $("#user_menu").hide();
                     $("#login_user").show();
+                    $("#datos_usuario_login").hide();
                 }else{
                     $("#add_user").hide();
                     $("#cerrar_session").show();
@@ -40,6 +41,12 @@
                     $("#mod_pass").show();
                     $("#user_menu").show();
                     $("#login_user").hide();
+                    $("#datos_usuario_login").show();
+                    if (data.usuario){
+                        data = $.parseJSON(data.usuario);
+                        $("#imagen_usuario").attr("title", data.fields.first_name+" "+data.fields.last_name);
+                        $("#imagen_usuario").attr("src", "../"+data.fields.imageFile);
+                    }
                 }
             });
         })();
@@ -67,6 +74,9 @@
             </button>
             <a class="navbar-brand" href="">Biodiversidad</a>
         </div>
+        <div id="datos_usuario_login" class="navbar-right">
+            <img id="imagen_usuario" class="img-responsive" style="width:50px;height:50px;margin-left:30px;border-radius:20px;"/>
+        </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li id="add_user"><a href="agregarUsuario">Registro</a> </li>
@@ -86,6 +96,8 @@
             </ul>
 
         </div>
+
+
     </div>
 </nav>
 <br />
