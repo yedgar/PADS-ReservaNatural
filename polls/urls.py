@@ -16,5 +16,8 @@ urlpatterns = [
     url(r'^isLogged/$', views.islogged_view, name='isLogged'),
     url(r'^agregarUsuario/$', views.agregar_usuario, name='agregarUsuario'),
 
+    url(r'^verDetalle/$', views.obtener_especie, name='verDetalle'),
+    url(r'^consultarEspecie/$', views.consultar_especie, name='consultarEspecie'),
+
     url(r'^ingresar/$', views.ingresar, name='ingresar'),
 ]
