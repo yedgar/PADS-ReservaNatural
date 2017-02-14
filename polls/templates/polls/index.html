@@ -5,7 +5,9 @@
     <title>Reserva Natural</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
     <script>
         (function(){
              $.getJSON("obtenerEspecies").done(function (data) {
@@ -16,9 +18,11 @@
                         var div = $('<div class="col-md-4 col-sm-6 col-lg-3 well">');
                         $(div).append("Categoria: "+this.fields.categoria);
                         $(div).append('<img src="../'+this.fields.fotoFile+'" class="img-responsive" style="width:200px;height:200px"/>');
-                        $(div).append("Nombre: "+this.fields.nombre+"<br />");
+                        $(div).append( '<a href="verDetalle/?id=' + this.pk + '">' + this.fields.nombre +'</a><br>');
                         $(div).append("Descripcion Corta: "+this.fields.descripcion_corta);
                         $(especies).append(div);
+
+
                     });
                 }
             });
@@ -28,13 +32,26 @@
                 if (data.mensaje == 'no'){
                     $("#add_user").show();
                     $("#cerrar_session").hide();
+                    $("#mod_user").hide();
+                    $("#mod_pass").hide();
+                    $("#user_menu").hide();
                     $("#login_user").show();
                     $("#mi_perfil").hide();
+                    $("#datos_usuario_login").hide();
                 }else{
                     $("#add_user").hide();
                     $("#cerrar_session").show();
-                    $("#mi_perfil").show();
+                    $("#mod_user").show();
+                    $("#mod_pass").show();
+                    $("#user_menu").show();
                     $("#login_user").hide();
+                    $("#mi_perfil").show();
+                    $("#datos_usuario_login").show();
+                    if (data.usuario){
+                        data = $.parseJSON(data.usuario);
+                        $("#imagen_usuario").attr("title", data.fields.first_name+" "+data.fields.last_name);
+                        $("#imagen_usuario").attr("src", "../"+data.fields.imageFile);
+                    }
                 }
             });
         })();
@@ -48,13 +65,15 @@
                 }
             });
         }
+
+
     </script>
 </head>
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle-collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -62,13 +81,27 @@
             </button>
             <a class="navbar-brand" href="">Biodiversidad</a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav"></ul>
+        <div id="datos_usuario_login" class="navbar-right">
+            <img id="imagen_usuario" class="img-responsive" style="width:50px;height:50px;margin-left:30px;border-radius:20px;"/>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li id="login_user"><a class="glyphicon glyphicon-log-in" href="ingresar"> Login</a> </li>
                 <li id="add_user"><a href="agregarUsuario">Registro</a> </li>
-                <li id="cerrar_session"><a id="click_cerrar_sesion" class="glyphicon glyphicon-log-out" href="#" onclick="logout()">Logout</a> </li>
+                <li id="login_user"><a href="ingresar"><span class="glyphicon glyphicon-log-in" ></span> Login</a></li>
+                <li id="cerrar_session"><a id="click_cerrar_sesion" href="#" onclick="logout()"><span class="glyphicon glyphicon-log-out" ></span> Logout</a></li>
             </ul>
+            <ul  class="nav navbar-nav navbar-right">
+                <li id="user_menu" class="dropdown">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Menu de Usuario<span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li id="mod_user"><a href="modificarUsuario">Modificacion de Datos</a> </li>
+                        <li id="mod_pass"><a href="modificarPassword">Modificacion de Password</a> </li>
+                    </ul>
+                </li>
+            </ul>
+
             <ul  class="nav navbar-nav navbar-right">
                 <li id="user_menu" class="dropdown">
                     <a  href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -80,7 +113,10 @@
                     </ul>
                 </li>
             </ul>
+
         </div>
+
+
     </div>
 </nav>
 <br />
@@ -89,6 +125,6 @@
 <h2 align="center">Biodiversidad Catálogo de Especies</h2>
 <h2 align="center">Nuestra Reserva</h2>
 <br />
-<div class="row" id="especies" />
+<div class="row" id="especies"/>
 </body>
 </html>

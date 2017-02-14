@@ -33,9 +33,72 @@ def add_user_view(request):
             if not usuarios.exists() and not usuarios2.exists():
                 usuario.set_password(password)
                 usuario.save()
+
                 mensaje = "ok"
             else:
                 mensaje = "El usuario ya existe"
+        else:
+            mensaje = "Las contrasenas no coinciden"
+
+    return JsonResponse({"mensaje": mensaje})
+
+@csrf_exempt
+def mod_user_view(request):
+    mensaje = ""
+    if request.method == 'POST':
+        requestUsername = request.POST['username']
+        requestEmail = request.POST['email']
+
+        usuarioUsername = Usuario.objects.filter(username=requestUsername)
+        usuarioEmail = Usuario.objects.filter(email=requestEmail)
+
+        requestUser = Usuario.objects.get(username=request.user.username)
+
+        modificacion = False
+
+        if (not usuarioUsername.exists() and not usuarioEmail.exists()):
+            modificacion = True
+        elif usuarioUsername.exists() and not usuarioEmail.exists():
+            if requestUser.username == usuarioUsername[0].username:
+                modificacion = True
+        elif not usuarioUsername.exists() and usuarioEmail.exists():
+            if requestUser.email == usuarioEmail[0].email:
+                modificacion = True
+        elif requestUser.email == usuarioEmail[0].email and usuarioUsername[0].username == requestUser.username:
+             modificacion = True
+
+        if modificacion:
+            requestUser.username = requestUsername
+            requestUser.email = requestEmail
+            requestUser.first_name = request.POST['first_name']
+            requestUser.last_name = request.POST['last_name']
+            requestUser.interes = request.POST['intereses']
+            if 'fotoFile' in request.FILES:
+                requestUser.imageFile = request.FILES['fotoFile']
+            if 'ciudades' in request.POST:
+                requestUser.ciudad_id = request.POST['ciudades']
+            requestUser.save()
+            mensaje = "ok"
+        else:
+            mensaje = "El usuario con el username o email ya existe"
+
+    return JsonResponse({"mensaje": mensaje})
+
+@csrf_exempt
+def mod_password_view(request):
+    if request.method == 'POST':
+        password = request.POST['password']
+        password2 = request.POST['password2']
+        if password == password2:
+            requestUser = Usuario.objects.get(username=request.user.username)
+            requestUser.set_password(password)
+            requestUser.save()
+            user = authenticate(username=request.user.username, password=password)
+            if user is not None:
+                login(request, user)
+                mensaje = "ok"
+            else:
+                mensaje = "Fail :("
         else:
             mensaje = "Las contrasenas no coinciden"
 
@@ -63,12 +126,17 @@ def logout_view(request):
 
 @csrf_exempt
 def islogged_view(request):
+    json_usuario = ""
     if request.user.is_authenticated():
         mensaje = 'ok'
+        usuario = Usuario.objects.filter(username=request.user.username)
+        datos_usuarios = serializers.serialize('json', usuario)
+        struct = json.loads(datos_usuarios)
+        json_usuario = json.dumps(struct[0])
     else:
         mensaje = 'no'
 
-    return JsonResponse({"mensaje": mensaje})
+    return JsonResponse({"mensaje": mensaje, "usuario": json_usuario})
 
 @csrf_exempt
 def consultar_paises(request):
@@ -97,6 +165,15 @@ def consultar_pais_user(request):
 @csrf_exempt
 def obtener_especies(request):
     qs = Especie.objects.all()
+    for especie in qs:
+        especie.categoria_id = Categoria.objects.filter(id = especie.categoria_id).first().nombre
+    qs_json = serializers.serialize('json', qs)
+    return JsonResponse(qs_json, safe=False)
+
+@csrf_exempt
+def consultar_especie(request):
+    #qs = Especie.objects.filter(id = request.GET.get('id', '2'))
+    qs = Especie.objects.filter(id=globvar)
     for especie in qs:
         especie.categoria_id = Categoria.objects.filter(id = especie.categoria_id).first().nombre
     qs_json = serializers.serialize('json', qs)
@@ -162,12 +239,17 @@ def mod_password_view(request):
 
     return JsonResponse({"mensaje": mensaje})
 
-
 def ir_index(request):
     return render(request,"polls/index.html")
 
 def agregar_usuario(request):
     return render(request, "polls/registro.html")
+
+def modificar_usuario(request):
+    return render(request, "polls/modificacion.html")
+
+def modificar_password(request):
+    return render(request, "polls/password.html")
 
 def ingresar(request):
     return render(request, "polls/login.html")
@@ -177,3 +259,11 @@ def perfil(request):
 
 def modificar_password(request):
     return render(request, "polls/password.html")
+
+@csrf_exempt
+def obtener_especie(request):
+    global globvar
+    globvar = request.GET.get('id');
+    consultar_especie(request)
+    return render(request, "polls/detalleespecie.html")
+

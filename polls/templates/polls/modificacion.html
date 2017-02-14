@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Registro</title>
+    <title>Modificación de Datos</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -11,56 +11,78 @@
     </script>
 </head>
 <body>
-<form id="formRegistro" action="../addUser/" enctype="multipart/form-data" method="post">
+<form id="formModificacion" action="../modUser/" enctype="multipart/form-data" method="post">
     <div class="row">
         <div class="col-md-6 col-sm-offset-3">
             <div id="mensaje" class="alert alert-danger">
                 <label id="mensaje1"></label>
             </div>
             <div class="page-header">
-                <h2>Registro</h2>
+                <h2>Modificación de Datos</h2>
             </div>
             <input id="username" name="username" type="text" placeholder="Usuario" class="form-control input-md"
                    required/>
             <br/>
             <input id="first_name" name="first_name" type="text" placeholder="Nombres" class="form-control input-md"
-                   required/>
+                   />
             <br/>
             <input id="last_name" name="last_name" type="text" placeholder="Apellidos" class="form-control input-md"
-                   required/>
+                   />
             <br/>
             <input id="email" name="email" type="email" placeholder="Email" class="form-control input-md" required/>
             <br/>
-            <input id="password" name="password" type="password" placeholder="Contraseña" class="form-control input-md"
-                   required/>
+            <input id="intereses" name="intereses" type="text" placeholder="Intereses Reserva"
+                   class="form-control input-md" />
             <br/>
-            <input id="password2" name="password2" type="password" placeholder="Confirmar Contraseña"
-                   class="form-control input-md" required/>
-            <br/>
-            <input id="intereses" name="intereses" type="text" placeholder="Cuéntenos el interés en la reserva natural"
-                   class="form-control input-md" required/>
-            <br/>
-            País
-            <select id="paises" name="paises" class="selectpicker form-control" required>
-            </select>
-            <br/>
-            Ciudad
-            <select id="ciudades" name="ciudades" class="selectpicker form-control" required>
-            </select>
-            <br/>
-            Seleccione su foto de perfil
             <input id="fotoFile" name="fotoFile" type="file"/>
             <br/>
+            <select id="paises" name="paises" class="selectpicker form-control">
+            </select>
             <br/>
-            <input type="submit" value="Registrar" class="btn btn-primary"/>
+            <select id="ciudades" name="ciudades" class="selectpicker form-control">
+            </select>
+            <br/>
+            <br/>
+            <input type="submit" value="Modificar" class="btn btn-primary"/>
             <a href="../">Cancelar</a>
         </div>
     </div>
 </form>
 <script>
     $("#mensaje").hide();
+    (function(){
+        //funcion para poblar la información inicial del usuario, probablemente crear ruta de consulta de info
+        // del usuario logged_user
+        $.getJSON("../loggedUser").done(function (data) {
+                if (data){
+                    if (data.mensaje != 'no'){
+
+                    data =  $.parseJSON(data.mensaje)[0];
+                    console.log(data)
+                    var username = $("#username");
+                        username.val(data.fields.username)
+                    var first_name = $("#first_name");
+                        first_name.val(data.fields.first_name)
+                    var last_name = $("#last_name");
+                        last_name.val(data.fields.last_name)
+                    var email = $("#email");
+                        email.val(data.fields.email)
+                    var intereses = $("#intereses");
+                        intereses.val(data.fields.interes)
+                    var fotoFile = $("#fotoFile");
+                        fotoFile.val(data.fields.fotoFile)
+                    var ciudades = $("#ciudades");
+                        ciudades.val(data.fields.ciudades)
+                    }
+                    else{
+                    $("#mensaje1").text(data.mensaje);
+                    $("#mensaje").show();
+                    }
+                }
+            });
+    })();
     $('form').submit(function (e) {
-        var formData = new FormData($("#formRegistro")[0]);
+        var formData = new FormData($("#formModificacion")[0]);
         $.ajax({
             url: $(this).attr('action'),
             type: $(this).attr('method'),
