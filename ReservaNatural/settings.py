@@ -1,3 +1,5 @@
+
+
 """
 Django settings for ReservaNatural project.
 
@@ -80,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'reserva_natural',
         'USER': 'postgres',
-        'PASSWORD': '12345',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '5432',
     }

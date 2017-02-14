@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reserva Natural</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>
+        (function(){
+            $.getJSON("../consultarEspecie").done(function (data) {
+                if (data){
+                    data =  $.parseJSON(data);
+                    var especie = $("#especie");
+                    $(data).each(function() {
+                        var div = $('<div class="col-md-4 col-sm-6" well>');
+                        $(div).append("Categoria: "+this.fields.categoria);
+                        $(div).append('<img src="../../'+this.fields.fotoFile+'" class="img-responsive" style="width:200px;height:200px"/>');
+                        $(div).append("Nombre: "+ this.fields.nombre + '<br>');
+                        $(div).append("Nombre Cientifico: " + this.fields.nombre_cientifico + '<br>');
+                        $(div).append("Clasificacion Taxonomica: " + this.fields.clasificacion_taxonomica + '<br>');
+                        $(div).append("Descripcion Corta: "+this.fields.descripcion_corta + '<br>');
+                        $(div).append("Descripcion Larga: "+this.fields.descripcion_larga + '<br>');
+                        $(especie).append(div);
+                    });
+
+                }
+            });
+        })();
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+    <title>Detalles de Especie</title>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-4 col-sm-offset-4">
+            <div class="page-header">
+                <h2>Detalles de Especie<h2>
+            </div>
+            <div class="form-group" id="especie" style="position: absolute; width: 728px; height: 200px;">
+                <button onclick="goBack()">Go Back</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
