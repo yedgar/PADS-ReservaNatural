@@ -30,5 +30,5 @@ class Ciudad(models.Model):
 
 class Usuario(AbstractUser):
     interes = models.CharField(max_length=1000)
-    imageFile = models.ImageField(upload_to='images', null=True)
+    imageFile = models.ImageField(upload_to='images', null=True,  blank=True)
     ciudad = models.ForeignKey(Ciudad, on_delete=models.CASCADE, null=True)
