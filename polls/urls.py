@@ -27,4 +27,7 @@ urlpatterns = [
     url(r'^consultarPaisUser/$', views.consultar_pais_user, name='consultarPaisUser'),
     url(r'^editarUsuario/$', views.editarUsuario, name='editarUsuario'),
     url(r'^modificarPassword/$', views.modificar_password, name='modificarPassword'),
+
+    url(r'^consultarCategorias/$', views.consultar_categorias, name='consultarCategoria'),
+    url(r'^obtenerEspeciesxCategoria/$', views.obtener_especiesxcategoria, name='obtenerEspeciesxCategoria'),
 ]
