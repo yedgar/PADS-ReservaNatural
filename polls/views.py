@@ -170,9 +170,17 @@ def obtener_especies(request):
     qs_json = serializers.serialize('json', qs)
     return JsonResponse(qs_json, safe=False)
 
+
+@csrf_exempt
+def obtener_especiesxcategoria(request):
+    qs = Especie.objects.filter(categoria = request.GET.get('id'))
+    for especie in qs:
+        especie.categoria_id = Categoria.objects.filter(id = especie.categoria_id).first().nombre
+    qs_json = serializers.serialize('json', qs)
+    return JsonResponse(qs_json, safe=False)
+
 @csrf_exempt
 def consultar_especie(request):
-    #qs = Especie.objects.filter(id = request.GET.get('id', '2'))
     qs = Especie.objects.filter(id=globvar)
     for especie in qs:
         especie.categoria_id = Categoria.objects.filter(id = especie.categoria_id).first().nombre
@@ -267,3 +275,8 @@ def obtener_especie(request):
     consultar_especie(request)
     return render(request, "polls/detalleespecie.html")
 
+@csrf_exempt
+def consultar_categorias(request):
+    qs = Categoria.objects.all()
+    qs_json = serializers.serialize('json', qs)
+    return JsonResponse(qs_json, safe=False)
