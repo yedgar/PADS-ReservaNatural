@@ -18,6 +18,11 @@ urlpatterns = [
     url(r'^agregarUsuario/$', views.agregar_usuario, name='agregarUsuario'),
     url(r'^verDetalle/$', views.obtener_especie, name='verDetalle'),
     url(r'^consultarEspecie/$', views.consultar_especie, name='consultarEspecie'),
+
+    #20170219 FB consultarEspecieComentario
+    url(r'^consultarEspecieComentario/$', views.consultar_especie_comentario, name='consultarEspecieComentario'),
+    url(r'^agregarEspecieComentario/$', views.agregar_especie_comentario, name='agregarEspecieComentario'),
+
     url(r'^modificarUsuario/$', views.modificar_usuario, name='modificarUsuario'),
     url(r'^modificarPassword/$', views.modificar_password, name='modificarPassword'),
     url(r'^ingresar/$', views.ingresar, name='ingresar'),
@@ -27,4 +32,7 @@ urlpatterns = [
     url(r'^consultarPaisUser/$', views.consultar_pais_user, name='consultarPaisUser'),
     url(r'^editarUsuario/$', views.editarUsuario, name='editarUsuario'),
     url(r'^modificarPassword/$', views.modificar_password, name='modificarPassword'),
+
+    url(r'^consultarCategorias/$', views.consultar_categorias, name='consultarCategoria'),
+    url(r'^obtenerEspeciesxCategoria/$', views.obtener_especiesxcategoria, name='obtenerEspeciesxCategoria'),
 ]
