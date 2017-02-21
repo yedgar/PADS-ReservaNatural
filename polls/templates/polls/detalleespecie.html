@@ -11,40 +11,96 @@
                 if (data){
                     data =  $.parseJSON(data);
                     var especie = $("#especie");
-                    $(data).each(function() {
-                        var div = $('<div class="col-md-4 col-sm-6" well>');
-                        $(div).append("Categoria: "+this.fields.categoria);
-                        $(div).append('<img src="../../'+this.fields.fotoFile+'" class="img-responsive" style="width:200px;height:200px"/>');
-                        $(div).append("Nombre: "+ this.fields.nombre + '<br>');
-                        $(div).append("Nombre Cientifico: " + this.fields.nombre_cientifico + '<br>');
-                        $(div).append("Clasificacion Taxonomica: " + this.fields.clasificacion_taxonomica + '<br>');
-                        $(div).append("Descripcion Corta: "+this.fields.descripcion_corta + '<br>');
-                        $(div).append("Descripcion Larga: "+this.fields.descripcion_larga + '<br>');
-                        $(especie).append(div);
-                    });
+                    var imagenespecie = $("#imagenespecie");
+                    var desclarga = $("#desclarga");
 
+                    $(data).each(function() {
+                        var divimg=$('<div>');
+                        $(divimg).append('<img src="../../'+this.fields.fotoFile+'" class="img-responsive" style="width:200px;height:200px"/>');
+                        $(imagenespecie).append(divimg);
+
+                        var test = $("input[name=hdnespecie]:hidden").val(this.pk.toString());
+
+                        var div = $('<div>');
+                        //$(div).append("<b>ID:</b> "+ this.pk + '<br>');
+                        $(div).append("<b>Nombre Especie:</b> "+ this.fields.nombre + '<br>');
+                        $(div).append("<b>Clasificacion Taxonomica:</b> " + this.fields.clasificacion_taxonomica + '<br>');
+                        $(div).append("<b>Nombre Cientifico:</b> " + this.fields.nombre_cientifico + '<br>');
+                        $(div).append("<b>Categoria:</b> "+this.fields.categoria + '<br>');
+                        $(div).append("<b>Descripcion Corta:</b> "+this.fields.descripcion_corta);
+                        $(especie).append(div);
+
+                        var divdesc=$('<div>');
+                        $(divdesc).append("<b>Descripcion Larga:</b> "+this.fields.descripcion_larga);
+                        $(desclarga).append(divdesc);
+                    });
                 }
             });
         })();
+
+        (function(){
+            $.getJSON("../consultarEspecieComentario").done(function (data) {
+                if (data){
+                    data =  $.parseJSON(data);
+                    var Comentario = $("#comentario");
+
+                    var div
+
+                    $(data).each(function(index)
+                    {
+                        div = $('<div>');
+                        //$(div).append(index + '<br>');
+                        $(div).append("<b>De:<b/> "+ this.fields.correo_electronico + '<br>');
+                        $(div).append(this.fields.descripcion + '<br><br>');
+                        $(Comentario).append(div);
+                    });
+                }
+            });
+        })();
+
         function goBack() {
             window.history.back();
         }
     </script>
-    <title>Detalles de Especie</title>
 </head>
 <body>
-    <div class="row">
-        <div class="col-md-4 col-sm-offset-4">
-            <div class="page-header">
-                <h2>Detalles de Especie<h2>
-            </div>
-            <div class="form-group" id="especie" style="position: absolute; width: 728px; height: 200px;">
-                <button onclick="goBack()">Go Back</button>
-            </div>
+    <form id="formespecie" action="../agregarEspecieComentario/" enctype="multipart/form-data" method="post">
+        <div class="row">
+            <div class="col-md-4 col-sm-offset-4">
+                    <div align="center">&nbsp;</div>
+                    <div>
+                        <table>
+                            <tr>
+                                <td valign="top">
+                                    <div id="imagenespecie"></div>
+                                </td>
+                                <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                <td valign="top">
+                                    <div id="especie"></div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div id="desclarga"></div>
+                    </div>
+                <div id="div5">&nbsp;</div>
 
+                <div id="comentario">
+                    <h3>Comentarios:</h3>
+                </div>
+
+                <div id="div6comentariostitulo"><h3>Agrega un comentario sobre esta especie</h3></div>
+                <div id="agregacomentario">
+                    <textarea id="comentarios" name="comentarios" placeholder="Comentario" rows="5" class="form-control input-md" required></textarea>
+                    <br/>
+                    <input id="email" name="email" type="email" placeholder="Email" class="form-control input-md" required/>
+                    <br/>
+                    <input type="hidden" id="hdnespecie" name="hdnespecie" value="">
+                    <div>
+                        <input type="submit" value="Comentar" class="btn btn-primary"/>&nbsp;<a href="../">Cancelar</a>
+                    </div>
+                </div>
+            </div>
         </div>
-
-    </div>
-
+    </form>
 </body>
 </html>

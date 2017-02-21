@@ -9,7 +9,7 @@ from django.urls.base import reverse
 from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
-from polls.models import Usuario, Pais, Ciudad, Especie, Categoria
+from polls.models import Usuario, Pais, Ciudad, Especie, Categoria, Comentario
 
 
 @csrf_exempt
@@ -185,7 +185,19 @@ def consultar_especie(request):
     for especie in qs:
         especie.categoria_id = Categoria.objects.filter(id = especie.categoria_id).first().nombre
     qs_json = serializers.serialize('json', qs)
+
     return JsonResponse(qs_json, safe=False)
+
+@csrf_exempt
+#20170218 FB
+#Muestra los comentarios dada un ID de especie.
+def consultar_especie_comentario(request):
+    # Obtener los comentarios de la especie dada ordenados por id descendiente (los mas antiguos primero)
+    qs = Comentario.objects.filter(especie_id=globvar).order_by("id").reverse()
+
+    qs_jsonCom = serializers.serialize('json', qs)
+
+    return JsonResponse(qs_jsonCom, safe=False)
 
 def is_logged_view(request):
     if request.user.is_authenticated():
@@ -273,10 +285,36 @@ def obtener_especie(request):
     global globvar
     globvar = request.GET.get('id');
     consultar_especie(request)
+    consultar_especie_comentario(request)
     return render(request, "polls/detalleespecie.html")
+
+@csrf_exempt
+#20170219 FB
+#Llama a agregar_especie_comment y luego carga la pagina, ya con el nuevo comentario
+def agregar_especie_comentario(request):
+    especie_id = request.POST['hdnespecie']
+
+    agregar_especie_comment(request)
+
+    return redirect('../verDetalle/?id='+especie_id)
+
+@csrf_exempt
+#20170219 FB
+#Salvar comentario
+def agregar_especie_comment(request):
+
+    if request.method == 'POST':
+        especie_id=request.POST['hdnespecie']
+        comentarios = request.POST['comentarios']
+        email = request.POST['email']
+
+        comment=Comentario(descripcion=comentarios, correo_electronico=email,especie_id=especie_id)
+        comment.save()
+
 
 @csrf_exempt
 def consultar_categorias(request):
     qs = Categoria.objects.all()
     qs_json = serializers.serialize('json', qs)
     return JsonResponse(qs_json, safe=False)
+
