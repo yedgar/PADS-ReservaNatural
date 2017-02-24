@@ -27,7 +27,7 @@ SECRET_KEY = 'reujb2-d(te@o6jyt_apy_liz8+v#zi5&p-89(%66bns$f45iz'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -133,8 +133,14 @@ STATICFILES_DIRS = [
 
 
 AUTH_USER_MODEL = 'polls.Usuario'
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'reservanaturalapp@gmail.com'
 EMAIL_PORT = 587
+
+
+import dj_database_url
+DATABASES['default'] =  dj_database_url.config()
+
