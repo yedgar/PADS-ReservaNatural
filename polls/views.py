@@ -7,6 +7,7 @@ from django.http.response import HttpResponseRedirect, HttpResponse, JsonRespons
 from django.shortcuts import render, redirect
 from django.urls.base import reverse
 from django.views.decorators.csrf import csrf_exempt
+from django.core.mail import EmailMessage
 
 # Create your views here.
 from polls.models import Usuario, Pais, Ciudad, Especie, Categoria, Comentario
@@ -310,7 +311,7 @@ def agregar_especie_comment(request):
 
         comment=Comentario(descripcion=comentarios, correo_electronico=email,especie_id=especie_id)
         comment.save()
-
+        enviar_email_comentario(request)
 
 @csrf_exempt
 def consultar_categorias(request):
@@ -318,3 +319,11 @@ def consultar_categorias(request):
     qs_json = serializers.serialize('json', qs)
     return JsonResponse(qs_json, safe=False)
 
+@csrf_exempt
+def enviar_email_comentario(request):
+
+    mail = request.POST['email']
+    especie = Especie.objects.get(id=request.POST['hdnespecie'])
+    email = EmailMessage('Reserva Natural - Nuevo comentario', 'Has comentado en la especie '+ especie.nombre + ':' +'\n'+
+                         request.POST['comentarios'] , to=[mail])
+    email.send()
